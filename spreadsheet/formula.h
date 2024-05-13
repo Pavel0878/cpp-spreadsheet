@@ -4,6 +4,8 @@
 
 #include <memory>
 #include <vector>
+#include <variant>
+#include <sstream>
 
 // Формула, позволяющая вычислять и обновлять арифметическое выражение.
 // Поддерживаемые возможности:
