@@ -145,17 +145,17 @@ public:
 
     double Evaluate(const std::function<double(Position)>& args) const override {
         // Скопируйте ваше решение из предыдущих уроков.
+        double lhs = lhs_->Evaluate(args);
+        double rhs = rhs_->Evaluate(args);
         switch (type_) {
         case Add:
-            return lhs_->Evaluate(args) + rhs_->Evaluate(args);
+            return lhs + rhs;
         case Subtract:
-            return lhs_->Evaluate(args) - rhs_->Evaluate(args);
+            return lhs - rhs;
         case Multiply:
-            return lhs_->Evaluate(args) * rhs_->Evaluate(args);
+            return lhs * rhs;
         case Divide:
-            if (std::isfinite(lhs_->Evaluate(args) / rhs_->Evaluate(args))) {
-                return lhs_->Evaluate(args) / rhs_->Evaluate(args);
-            }
+            if (rhs != 0) { return lhs / rhs; }
             else {
                 throw FormulaError(FormulaError::Category::Arithmetic);
             }
@@ -200,14 +200,9 @@ public:
 
     double Evaluate(const std::function<double(Position)>& args) const override {
         // Скопируйте ваше решение из предыдущих уроков.
-        switch (type_) {
-        case UnaryPlus:
-            return operand_->Evaluate(args);
-        case UnaryMinus:
-            return -operand_->Evaluate(args);
-        default:
-            throw FormulaError(FormulaError::Category::Arithmetic);
-        }
+        double result = operand_->Evaluate(args);
+        if (type_ == UnaryMinus) { return -result; }
+        else { return result; }
     }
 
 private:
