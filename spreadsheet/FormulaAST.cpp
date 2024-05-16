@@ -9,6 +9,7 @@
 #include <memory>
 #include <optional>
 #include <sstream>
+#include <limits>
 
 namespace ASTImpl {
 
@@ -145,20 +146,21 @@ public:
 
     double Evaluate(const std::function<double(Position)>& args) const override {
         // Скопируйте ваше решение из предыдущих уроков.
-        double lhs = lhs_->Evaluate(args);
-        double rhs = rhs_->Evaluate(args);
+        constexpr double EPSILON = 1e-6;
+        double left_number = lhs_->Evaluate(args);
+        double right_number = rhs_->Evaluate(args);
         switch (type_) {
         case Add:
-            return lhs + rhs;
+            return left_number + right_number;
         case Subtract:
-            return lhs - rhs;
+            return left_number - right_number;
         case Multiply:
-            return lhs * rhs;
+            return left_number * right_number;
         case Divide:
-            if (rhs != 0) { return lhs / rhs; }
-            else {
+            if (std::abs(right_number) < EPSILON) {
                 throw FormulaError(FormulaError::Category::Arithmetic);
-            }
+            }else{
+                return left_number / right_number; }
         default:
             throw FormulaError(FormulaError::Category::Value);
         }
